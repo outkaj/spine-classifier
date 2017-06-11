@@ -2,7 +2,7 @@
 
 import sys
 import os
-from PIL import Image
+import PIL.Image
 import pyocr
 import pyocr.builders
 import cv2
@@ -34,11 +34,9 @@ if (len(sys.argv) < 2):
 
 pathname = os.path.dirname(sys.argv[0])
 
-
 img      = cv2.imread(str(sys.argv[1]))
 # for visualization
 vis      = img.copy()
-
 
 # Extract channels to be processed individually
 channels = cv2.text.computeNMChannels(img)
@@ -72,17 +70,17 @@ for channel in channels:
 
 #Visualization
 cv2.imshow("Text detection result", vis)
-cv2.waitKey(0)
+new_img = PIL.Image.fromarray(vis[rects])
 
 txt = tool.image_to_string(
-    Image.open(vis),
+    PIL.Image.open(new_img),
     lang=lang,
     builder=pyocr.builders.TextBuilder()
 )
 # txt is a Python string
 
 word_boxes = tool.image_to_string(
-    Image.open(vis),
+    PIL.Image.open(new_img),
     lang="eng",
     builder=pyocr.builders.WordBoxBuilder()
 )
@@ -94,7 +92,7 @@ word_boxes = tool.image_to_string(
 # may return empty boxes
 
 line_and_word_boxes = tool.image_to_string(
-    Image.open(vis), lang="eng",
+    PIL.Image.open(new_img), lang="eng",
     builder=pyocr.builders.LineBoxBuilder()
 )
 # list of line objects. For each line object:
@@ -107,7 +105,7 @@ line_and_word_boxes = tool.image_to_string(
 
 # Digits - Only Tesseract (not 'libtesseract' yet !)
 digits = tool.image_to_string(
-    Image.open('test-digits.png'),
+    PIL.Image.open(new_img),
     lang=lang,
     builder=pyocr.tesseract.DigitBuilder()
 )
@@ -117,3 +115,5 @@ print(txt)
 print(word_boxes)
 print(line_and_word_boxes)
 print(digits)
+
+cv2.waitKey(0)
