@@ -87,7 +87,7 @@ def swt(gimg):
     row_2_pad = np.zeros([1, cols], dtype=np.uint8)
     bimg_padded = np.concatenate((bimg, row_2_pad), axis=0)
     dist = cv2.distanceTransform(bimg_padded, cv2.DIST_L2, cv2.DIST_MASK_PRECISE)
-    dist = np.take(dist, list(range(rows)), axis=0)
+    dist = np.take(dist, range(rows), axis=0)
     dist = dist.round()
     #print dist
     it = np.nditer([bimg, dist],
@@ -168,7 +168,7 @@ def get_swt_frm_mser(region, rows, cols, img):
     ymax = ymin + height
     for h in range(ymin, ymax):
         row = np.take(img, (h, ), axis=0)
-        horz_pix = np.take(row, list(range(xmin, xmax)))
+        horz_pix = np.take(row, range(xmin, xmax))
         selected_pix.append(horz_pix)
     selected_pix = np.array(selected_pix)
     sw = swt(selected_pix)
@@ -178,7 +178,7 @@ def filter_on_sw(region_dict):
     filtered_dict = {}
     distance_th = 4.0
     group_num = 0
-    for rkey in list(region_dict.keys()):
+    for rkey in region_dict.keys():
         med = region_dict[rkey]['sw_med']
         height = bbox_height(region_dict[rkey]['bbox'])
         added = False
@@ -215,7 +215,7 @@ def kmean(region_dict, rows, num_clusters):
     for rkey in region_dict:
         center_y = get_y_center(region_dict[rkey]['bbox'])
         cost += center_y * center_y
-    cost = cost/len(list(region_dict.keys()))
+    cost = cost/len(region_dict.keys())
 
     iter_no = 0
     while True:
@@ -305,9 +305,9 @@ def get_bbox_img(gimg, bb):
     x_start = int(bb[0][0])
     x_end = int(bb[1][0])
     #print x_start, x_end, y_start, y_end
-    row_extracted = gimg.take(list(range(y_start, y_end+1)), axis=0)
+    row_extracted = gimg.take(range(y_start, y_end+1), axis=0)
     #print gimg
-    extracted = row_extracted.take(list(range(x_start, x_end+1)), axis=1)
+    extracted = row_extracted.take(range(x_start, x_end+1), axis=1)
     return extracted
 
 def get_text_from_cluster(cluster_vld, region_dict, gimg):
@@ -338,7 +338,7 @@ def run(fimage):
     mser_areas, _ = mser.detectRegions(gray_img)
     region_dict = {}
     rows, cols = gray_img.shape
-    print(("Image size = {} X {}  MSER_AREAS = {} path = {}".format(rows, cols, len(mser_areas), fimage)))
+    print("Image size = {} X {}  MSER_AREAS = {} path = {}".format(rows, cols, len(mser_areas), fimage))
     region_num = 0
     for m in mser_areas:
         name = 'mser_' + str(region_num)
