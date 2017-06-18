@@ -291,9 +291,9 @@ def dbg_get_cluster_rect (cluster_vld, region_dict):
                         cur_lL[0] = region_lL[0]
                     if region_lL[1] <= cur_lL[1]:
                         cur_lL[1] = region_lL[1]
-                    if region_uR[0] <= cur_uR[0]:
+                    if region_uR[0] >= cur_uR[0]:
                         cur_uR[0] = region_uR[0]
-                    if region_uR[1] <= cur_uR[1]:
+                    if region_uR[1] >= cur_uR[1]:
                         cur_uR[1] = region_uR[1]
             bbox_list.append([cur_lL, cur_uR])
     return bbox_list
@@ -318,7 +318,7 @@ def get_text_from_cluster(cluster_vld, region_dict, gimg):
       extracted = get_bbox_img(gimg, bb)
       #print extracted
       ext_img = smp.toimage(extracted)
-      found = image_to_string(ext_img, cleanup=False)
+      found = image_to_string(ext_img)
       str_list.append(found.strip())
     str_list.insert(0, str_list)
     print("TEXT FOUND")
