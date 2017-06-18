@@ -57,17 +57,18 @@ def preprocess_img(img):
     clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8,8))
     img = clahe.apply(img)
     #Resize to match SVGA size
-    height, width = img.shape
+    #height, width = img.shape
     #SVGA size is 800 X 600
-    if width > height:
-        scale = 800. / width
-    else:
-        scale = 600. / width
+    #if width > height:
+        #scale = 800. / width
+    #else:
+        #scale = 600. / width
     #Avoid shrinking
     #if scale &amp;amp;amp;amp;lt; 1.0:
     #    scale = 1.0
-    dst = cv2.resize(img, (0,0), None, scale, scale, cv2.INTER_LINEAR)
-    return dst
+    #dst = cv2.resize(img, (0,0), None, scale, scale, cv2.INTER_LINEAR)
+    #return dst
+    return img
 
 def swt_window_func(l):
     center = l[4]
@@ -366,7 +367,8 @@ def run(fimage):
 
 if __name__ == '__main__':
     #db_path = 'src/' ### Edit this line
-    img_name = r'testhorizontal2.jpg'
+    #img_name = r'testhorizontal2.jpg'
+    img_name = r'testvertical.jpg'
     #img_name = r'cropped.png'
     #img_name = r'cropped2.png'
     #img_name = r'real_img.png'
