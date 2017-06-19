@@ -3,8 +3,11 @@ import cv2
 import scipy.misc as smp
 import numpy as np
 import json
-from pytesser import *
 import pprint
+import sys
+import PIL.Image
+import pyocr
+import pyocr.builders
 
 #Hardcoded pink color to highlight detected text region
 color = (170, 28, 155)
@@ -318,7 +321,29 @@ def get_text_from_cluster(cluster_vld, region_dict, gimg):
       extracted = get_bbox_img(gimg, bb)
       #print extracted
       ext_img = smp.toimage(extracted)
-      found = image_to_string(ext_img)
+      tools = pyocr.get_available_tools()
+      if len(tools) == 0:
+          print("No OCR tool found")
+          sys.exit(1)
+      # The tools are returned in the recommended order of usage
+      tool = tools[0]
+      print("       Will use tool '%s'" % (tool.get_name()))
+      # Ex: Will use tool 'libtesseract'
+
+      langs = tool.get_available_languages()
+      print("       Available languages: %s" % ", ".join(langs))
+      lang = langs[1]
+      print("       Will use lang '%s'" % (lang))
+      # Ex: Will use lang 'fra'
+      # Note that languages are NOT sorted in any way. Please refer
+      # to the system locale settings for the default language
+      # to use.
+      found = tool.image_to_string(
+          PIL.Image.open(ext_img),
+          lang=lang,
+          builder=pyocr.builders.TextBuilder()
+      )
+      #found = image_to_string(ext_img)
       str_list.append(found.strip())
     str_list.insert(0, str_list)
     print("TEXT FOUND")
