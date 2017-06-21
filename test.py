@@ -5,9 +5,11 @@ import numpy as np
 import json
 import pprint
 import sys
-import PIL.Image
-import pyocr
-import pyocr.builders
+try:
+    import Image
+except ImportError:
+    from PIL import Image
+import pytesseract
 
 #Hardcoded pink color to highlight detected text region
 color = (170, 28, 155)
@@ -315,39 +317,19 @@ def get_bbox_img(gimg, bb):
 
 def get_text_from_cluster(cluster_vld, region_dict, gimg):
     bbox_list = dbg_get_cluster_rect(cluster_vld, region_dict)
-    #scratch_image_name = 'nutro.tmp.bmp'
+    #scratch_image_name = 'books.tmp.bmp'
     str_list = []
     for bb in bbox_list:
       extracted = get_bbox_img(gimg, bb)
       #print extracted
       ext_img = smp.toimage(extracted)
-      tools = pyocr.get_available_tools()
-      if len(tools) == 0:
-          print("No OCR tool found")
-          sys.exit(1)
-      # The tools are returned in the recommended order of usage
-      tool = tools[0]
-      print("       Will use tool '%s'" % (tool.get_name()))
-      # Ex: Will use tool 'libtesseract'
-
-      langs = tool.get_available_languages()
-      print("       Available languages: %s" % ", ".join(langs))
-      lang = langs[1]
-      print("       Will use lang '%s'" % (lang))
-      # Ex: Will use lang 'fra'
-      # Note that languages are NOT sorted in any way. Please refer
-      # to the system locale settings for the default language
-      # to use.
-      found = tool.image_to_string(
-          PIL.Image.open(ext_img),
-          lang=lang,
-          builder=pyocr.builders.TextBuilder()
-      )
-      #found = image_to_string(ext_img)
+      found = pytesseract.image_to_string(ext_img)
       str_list.append(found.strip())
     str_list.insert(0, str_list)
-    print("TEXT FOUND")
+    print("TEXT FOUND");
     pprint.pprint(str_list)
+    #cv2.imwrite('testverticalchanged.jpg', ext_img)
+    #print(pytesseract.image_to_string(Image.open('testverticalchanged.jpg'), lang='eng'))
 
 def run(fimage):
     #Constants:
@@ -386,7 +368,6 @@ def run(fimage):
     cluster_vld = kmean(region_dict, rows, num_clusters)
     bbox_list = dbg_get_cluster_rect(cluster_vld, region_dict)
     get_text_from_cluster(cluster_vld, region_dict, gray_img)
-
     cpy_img = np.copy(gray_img)
     dbg_draw_txt_rect(cpy_img, bbox_list)
 
@@ -399,4 +380,4 @@ if __name__ == '__main__':
     #img_name = r'real_img.png'
     #img_name = r'Real1.JPG'
     #fimage = os.path.join(img_name)
-    run(img_name)
+    run("testvertical.jpg")
