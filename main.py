@@ -1,30 +1,4 @@
-#!/usr/bin/python
 
-import sys
-import os
-import PIL.Image
-import pyocr
-import pyocr.builders
-import cv2
-import numpy as np
-
-tools = pyocr.get_available_tools()
-if len(tools) == 0:
-    print("No OCR tool found")
-    sys.exit(1)
-# The tools are returned in the recommended order of usage
-tool = tools[0]
-print("       Will use tool '%s'" % (tool.get_name()))
-# Ex: Will use tool 'libtesseract'
-
-langs = tool.get_available_languages()
-print("       Available languages: %s" % ", ".join(langs))
-lang = langs[1]
-print("       Will use lang '%s'" % (lang))
-# Ex: Will use lang 'fra'
-# Note that languages are NOT sorted in any way. Please refer
-# to the system locale settings for the default language
-# to use.
 
 print('       A demo script of the Extremal Region Filter algorithm described in:')
 print('       Neumann L., Matas J.: Real-Time Scene Text Localization and Recognition, CVPR 2012\n')
