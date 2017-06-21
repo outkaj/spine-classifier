@@ -72,48 +72,7 @@ for channel in channels:
 cv2.imshow("Text detection result", vis)
 new_img = PIL.Image.fromarray(vis[rects])
 
-txt = tool.image_to_string(
-    PIL.Image.open(new_img),
-    lang=lang,
-    builder=pyocr.builders.TextBuilder()
-)
-# txt is a Python string
 
-word_boxes = tool.image_to_string(
-    PIL.Image.open(new_img),
-    lang="eng",
-    builder=pyocr.builders.WordBoxBuilder()
-)
-# list of box objects. For each box object:
-#   box.content is the word in the box
-#   box.position is its position on the page (in pixels)
-#
-# Beware that some OCR tools (Tesseract for instance)
-# may return empty boxes
 
-line_and_word_boxes = tool.image_to_string(
-    PIL.Image.open(new_img), lang="eng",
-    builder=pyocr.builders.LineBoxBuilder()
-)
-# list of line objects. For each line object:
-#   line.word_boxes is a list of word boxes (the individual words in the line)
-#   line.content is the whole text of the line
-#   line.position is the position of the whole line on the page (in pixels)
-#
-# Beware that some OCR tools (Tesseract for instance)
-# may return empty boxes
-
-# Digits - Only Tesseract (not 'libtesseract' yet !)
-digits = tool.image_to_string(
-    PIL.Image.open(new_img),
-    lang=lang,
-    builder=pyocr.tesseract.DigitBuilder()
-)
-# digits is a python string
-
-print(txt)
-print(word_boxes)
-print(line_and_word_boxes)
-print(digits)
 
 cv2.waitKey(0)
