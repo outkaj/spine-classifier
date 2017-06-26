@@ -1,16 +1,27 @@
+import sys
+import os
+import pytesseract
+import cv2
+import numpy as np
+import scipy.misc as smp
+import pprint
 
-
+print('\ntextdetection.py')
 print('       A demo script of the Extremal Region Filter algorithm described in:')
 print('       Neumann L., Matas J.: Real-Time Scene Text Localization and Recognition, CVPR 2012\n')
+
+
 if (len(sys.argv) < 2):
   print(' (ERROR) You must call this script with an argument (path_to_image_to_be_processed)\n')
   quit()
 
 pathname = os.path.dirname(sys.argv[0])
 
+
 img      = cv2.imread(str(sys.argv[1]))
 # for visualization
 vis      = img.copy()
+
 
 # Extract channels to be processed individually
 channels = cv2.text.computeNMChannels(img)
@@ -43,10 +54,12 @@ for channel in channels:
 
 
 #Visualization
-cv2.imshow("Text detection result", vis)
-new_img = PIL.Image.fromarray(vis[rects])
-
-
-
-
-cv2.waitKey(0)
+img = cv2.imshow("Text detection result", vis)
+str_list = []
+ext_img = smp.toimage(vis)
+found = pytesseract.image_to_string(ext_img)
+str_list.append(found.strip())
+str_list.insert(0, str_list)
+print("TEXT FOUND");
+pprint.pprint(str_list)
+#cv2.waitKey(0)
