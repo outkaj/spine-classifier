@@ -403,12 +403,15 @@ def run(fimage):
     dbg_draw_txt_rect(cpy_img, bbox_list)
 
 if __name__ == '__main__':
-    # db_path = 'src/' ### Edit this line
-    # img_name = r'testhorizontal2.jpg'
-    # img_name = r'testvertical.jpg'
-    # img_name = r'cropped.png'
-    # img_name = r'cropped2.png'
-    # img_name = r'real_img.png'
-    # img_name = r'Real1.JPG'
-    # fimage = os.path.join(img_name)
-    run("testhorizontal.jpg")
+    #run("facebook-logo-vertical.jpg")
+    #run("facebook-logo-vertical.crop.png")
+    #run("facebook-logo-horizontal.jpg")
+    #run("facebook-logo-horizontal.crop.png")
+    #run("testvertical.jpg")
+    #run("testvertical.crop.png")
+    #run("testhorizontal.jpg")
+    #run("testhorizontal.crop.png")
+    #run("testhorizontal2.jpg")
+    #run("testhorizontal2.crop.png")
+    #run("testsmalltext.jpg")
+    run("testsmalltext.crop.png")
