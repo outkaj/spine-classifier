@@ -364,11 +364,6 @@ def run(fimage):
     ar_thresh_min = 0.5
     sw_ratio_thresh = 0.5
     org_img = cv2.imread(fimage)
-    # loop over the angles to rotate the image
-    #for angle in xrange(0, 360, 90):
-	# rotate the image and display it
-	   # rotated = imutils.rotate(org_img, angle=angle)
-	#cv2.imshow("Angle=%d" % (angle), rotated)
     gray_img = cv2.cvtColor(org_img, cv2.COLOR_BGR2GRAY)
     gray_img = preprocess_img(gray_img)
     mser = cv2.MSER_create()
@@ -403,15 +398,21 @@ def run(fimage):
     dbg_draw_txt_rect(cpy_img, bbox_list)
 
 if __name__ == '__main__':
-    #run("facebook-logo-vertical.jpg")
-    #run("facebook-logo-vertical.crop.png")
-    #run("facebook-logo-horizontal.jpg")
-    #run("facebook-logo-horizontal.crop.png")
-    #run("testvertical.jpg")
-    #run("testvertical.crop.png")
-    #run("testhorizontal.jpg")
-    #run("testhorizontal.crop.png")
-    #run("testhorizontal2.jpg")
-    #run("testhorizontal2.crop.png")
-    #run("testsmalltext.jpg")
-    run("testsmalltext.crop.png")
+    #pic_name = "facebook-logo-vertical.jpg"
+    #pic_name = "facebook-logo-vertical.crop.png"
+    #pic_name = "facebook-logo-horizontal.jpg"
+    #pic_name = "facebook-logo-horizontal.crop.png"
+    pic_name = "testvertical.jpg"
+    #pic_name = "testvertical.crop.png"
+    #pic_name = "testhorizontal.jpg"
+    #pic_name = "testhorizontal.crop.png"
+    #pic_name = "testhorizontal2.jpg"
+    #pic_name = "testhorizontal2.crop.png"
+    #pic_name = "testsmalltext.jpg"
+    #pic_name = "testsmalltext.crop.png"
+    img = cv2.imread(pic_name,-1)
+    if "vertical" in pic_name:
+	    rotated = cv2.imwrite('{} {}'.format(pic_name, "-rotated.jpg"), imutils.rotate(img, angle=90))
+	    cv2.imshow("Angle=90", rotated)
+        #= cv2.imwrite()
+    #run(rotated)
