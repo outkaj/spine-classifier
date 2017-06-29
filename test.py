@@ -402,17 +402,19 @@ if __name__ == '__main__':
     #pic_name = "facebook-logo-vertical.crop.png"
     #pic_name = "facebook-logo-horizontal.jpg"
     #pic_name = "facebook-logo-horizontal.crop.png"
-    pic_name = "testvertical.jpg"
+    #pic_name = "testvertical.jpg"
     #pic_name = "testvertical.crop.png"
     #pic_name = "testhorizontal.jpg"
-    #pic_name = "testhorizontal.crop.png"
+    pic_name = "testhorizontal.crop.png"
     #pic_name = "testhorizontal2.jpg"
     #pic_name = "testhorizontal2.crop.png"
     #pic_name = "testsmalltext.jpg"
     #pic_name = "testsmalltext.crop.png"
     img = cv2.imread(pic_name,-1)
     if "vertical" in pic_name:
-	    rotated = cv2.imwrite('{} {}'.format(pic_name, "-rotated.jpg"), imutils.rotate(img, angle=90))
-	    cv2.imshow("Angle=90", rotated)
+	    rotated = cv2.imwrite('{} {}'.format(pic_name, "-rotated.jpg"), imutils.rotate_bound(img, angle=270))
+	    #cv2.imshow("Angle=90", rotated)
         #= cv2.imwrite()
-    #run(rotated)
+        #run("testhorizontal.crop.png -rotated.jpg")
+    else:
+        #run("testhorizontal.crop.png")
