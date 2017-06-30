@@ -462,8 +462,8 @@ def run(fimage):
         bb = bbox(m)
         ar = bbox_width(bb)/bbox_height(bb)
         # Filter based on AspectRatio
-        if ar < ar_thresh_max and ar > ar_thresh_min: #commented min check because '1' is getting filtered
-            # print &amp;quot;SW for region: &amp;quot;, region_num
+        if ar < ar_thresh_max: #and ar > ar_thresh_min: #commented min check because '1' is getting filtered
+            # print SW for region: region_num
             sw = get_swt_frm_mser(m, rows, cols, gray_img)
             sw_std = np.std(sw)
             sw_mean = np.mean(sw)
