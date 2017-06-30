@@ -9,9 +9,9 @@ try:
     import Image
 except ImportError:
     from PIL import Image
-#import pytesseract
 import pyocr
 import pyocr.builders
+import codecs
 import imutils
 
 # Hardcoded pink color to highlight detected text region
@@ -364,16 +364,11 @@ def get_text_from_cluster(cluster_vld, region_dict, gimg):
       lang="eng",
       builder=pyocr.builders.WordBoxBuilder()
       )
-      #found = pytesseract.image_to_string(ext_img)
       result = [x.content for x in found]
       str_list.append(result)
     str_list.insert(0, str_list)
     print("TEXT FOUND");
     pprint.pprint(str_list)
-    # cv2.imwrite('testverticalchanged.jpg', ext_img)
-    # print(pytesseract.image_to_string(Image.open('testverticalchanged.jpg'),
-    # lang='eng'))
-
 
 def run(fimage):
     # Constants:
