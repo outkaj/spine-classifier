@@ -14,11 +14,85 @@ import pyocr.builders
 import codecs
 import imutils
 
+class SpineWordBoxBuilder(pyocr.builders.BaseBuilder):
+    """
+    If passed to image_to_string(), image_to_string() will return an array of
+    Box. Each box contains a word recognized in the image.
+    """
+
+    def __init__(self, tesseract_layout=1):
+        file_ext = ["html", "hocr"]
+        tess_flags = ["-psm", str(tesseract_layout)]
+        tess_conf = ["hocr", "--load_system_dawg", "0", "--load_freq_dawg", "0", "--load_unambig_dawg", "0",
+        "--load_punc_dawg", "0", "--load_number_dawg", "0", "--load_bigram_dawg", "0",
+        "--load_fixed_length_dawgs", "0"]
+        cun_args = ["-f", "hocr"]
+        super(SpineWordBoxBuilder, self).__init__(file_ext, tess_flags, tess_conf,
+                                             cun_args)
+        self.word_boxes = []
+        self.tesseract_layout = tesseract_layout
+
+    def read_file(self, file_descriptor):
+        """
+        Extract of set of Box from the lines of 'file_descriptor'
+        Return:
+            An array of Box.
+        """
+        parsers = [pyocr.builders._WordHTMLParser(), pyocr.builders._LineHTMLParser()]
+        html_str = file_descriptor.read()
+
+        for p in parsers:
+            p.feed(html_str)
+            if len(p.boxes) > 0:
+                last_box = p.boxes[-1]
+                if last_box.content == pyocr.util.to_unicode(""):
+                    # some parser leave an empty box at the end
+                    p.boxes.pop(-1)
+                return p.boxes
+        return []
+
+    @staticmethod
+    def write_file(file_descriptor, boxes):
+        """
+        Write boxes in a box file. Output is a *very* *simplified* version
+        of hOCR.
+        Warning:
+            The file_descriptor must support UTF-8 ! (see module 'codecs')
+        """
+        global _XHTML_HEADER
+
+        impl = xml.dom.minidom.getDOMImplementation()
+        newdoc = impl.createDocument(None, "root", None)
+
+        file_descriptor.write(_XHTML_HEADER)
+        file_descriptor.write(to_unicode("<body>\n"))
+        for box in boxes:
+            xml_str = to_unicode("%s") % box.get_xml_tag(newdoc).toxml()
+            file_descriptor.write(
+                to_unicode("<p>") + xml_str + to_unicode("</p>\n")
+            )
+        file_descriptor.write(to_unicode("</body>\n</html>\n"))
+
+    def start_line(self, box):
+        pass
+
+    def add_word(self, word, box):
+        self.word_boxes.append(Box(word, box))
+
+    def end_line(self):
+        pass
+
+    def get_output(self):
+        return self.word_boxes
+
+    @staticmethod
+    def __str__():
+        return "Word boxes"
+
 # Hardcoded pink color to highlight detected text region
 color = (170, 28, 155)
 char_height = 20.0
 # color = (0, 0, 0)
-
 
 def bbox(points):
     res = np.zeros((2, 2))
@@ -362,7 +436,7 @@ def get_text_from_cluster(cluster_vld, region_dict, gimg):
       ext_img = smp.toimage(extracted)
       found = tool.image_to_string((ext_img),
       lang="eng",
-      builder=pyocr.builders.WordBoxBuilder()
+      builder=SpineWordBoxBuilder()
       )
       result = [x.content for x in found]
       str_list.append(result)
