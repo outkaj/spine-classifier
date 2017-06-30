@@ -115,14 +115,13 @@ def aspect_ratio(region):
 
 
 def filter_on_ar(regions):
-    # Filter text regions based on Aspect-ration &amp;amp;amp;amp;lt;
-    # 3.0&amp;quot;
+    # Filter text regions based on Aspect-ration and < 3.0;
     return [x for x in regions if aspect_ratio(x) < 3.0]
 
 
 def dbg_draw_txt_contours(img, mser):
-    # amp;quot;Draws contours on original image to show detected text
-    # region&amp;quot;
+    # Draws contours on original image to show detected text
+    # region
     overlapped_img = cv2.drawContours(img, mser, -1, color)
     new_img = smp.toimage(overlapped_img)
     new_img.show()
@@ -142,7 +141,7 @@ def dbg_draw_txt_rect(img, bbox_list):
 
 
 def preprocess_img(img):
-    #&amp;quot;Enhance contrast and resize the image&amp;quot;
+    # Enhance contrast and resize the image
     # create a CLAHE object (Arguments are optional).
     # It is adaptive localized hist-eq and also avoid noise
     # amplification with cliplimit
@@ -411,7 +410,6 @@ def get_bbox_img(gimg, bb):
     x_end = int(bb[1][0])
     # print x_start, x_end, y_start, y_end
     row_extracted = gimg.take(list(range(y_start, y_end + 1)), axis=0)
-    # print gimg
     extracted = row_extracted.take(list(range(x_start, x_end + 1)), axis=1)
     return extracted
 
@@ -464,7 +462,7 @@ def run(fimage):
         bb = bbox(m)
         ar = bbox_width(bb)/bbox_height(bb)
         # Filter based on AspectRatio
-        if ar < ar_thresh_max: # and ar&amp;amp;amp;amp;gt;ar_thresh_min: #commented min check because '1' is getting filtered
+        if ar < ar_thresh_max and ar > ar_thresh_min: #commented min check because '1' is getting filtered
             # print &amp;quot;SW for region: &amp;quot;, region_num
             sw = get_swt_frm_mser(m, rows, cols, gray_img)
             sw_std = np.std(sw)
@@ -499,8 +497,6 @@ if __name__ == '__main__':
     img = cv2.imread(pic_name,-1)
     if "vertical" in pic_name:
         rotated = cv2.imwrite('{} {}'.format(pic_name, "-rotated.jpg"), imutils.rotate_bound(img, angle=270))
-        #cv2.imshow("Angle=90", rotated)
-        #= cv2.imwrite()
         run('{} {}'.format(pic_name, "-rotated.jpg"))
     else:
         run(pic_name)
