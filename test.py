@@ -9,7 +9,9 @@ try:
     import Image
 except ImportError:
     from PIL import Image
-import pytesseract
+#import pytesseract
+import pyocr
+import pyocr.builders
 import imutils
 
 # Hardcoded pink color to highlight detected text region
@@ -344,12 +346,27 @@ def get_text_from_cluster(cluster_vld, region_dict, gimg):
     bbox_list = dbg_get_cluster_rect(cluster_vld, region_dict)
     # scratch_image_name = 'books.tmp.bmp'
     str_list = []
+    tools = pyocr.get_available_tools()
+    if len(tools) == 0:
+        print("No OCR tool found")
+        sys.exit(1)
+    tool = tools[0]
+    print("Will use tool '%s'" % (tool.get_name()))
+    langs = tool.get_available_languages()
+    print("Available languages: %s" % ", ".join(langs))
+    lang = langs[0]
+    print("Will use lang '%s'" % (lang))
     for bb in bbox_list:
       extracted = get_bbox_img(gimg, bb)
       # print extracted
       ext_img = smp.toimage(extracted)
-      found = pytesseract.image_to_string(ext_img)
-      str_list.append(found.strip())
+      found = tool.image_to_string((ext_img),
+      lang="eng",
+      builder=pyocr.builders.WordBoxBuilder()
+      )
+      #found = pytesseract.image_to_string(ext_img)
+      result = [x.content for x in found]
+      str_list.append(result)
     str_list.insert(0, str_list)
     print("TEXT FOUND");
     pprint.pprint(str_list)
@@ -403,18 +420,18 @@ if __name__ == '__main__':
     #pic_name = "facebook-logo-horizontal.jpg"
     #pic_name = "facebook-logo-horizontal.crop.png"
     #pic_name = "testvertical.jpg"
-    #pic_name = "testvertical.crop.png"
+    pic_name = "testvertical.crop.png"
     #pic_name = "testhorizontal.jpg"
-    pic_name = "testhorizontal.crop.png"
+    #pic_name = "testhorizontal.crop.png"
     #pic_name = "testhorizontal2.jpg"
     #pic_name = "testhorizontal2.crop.png"
     #pic_name = "testsmalltext.jpg"
     #pic_name = "testsmalltext.crop.png"
     img = cv2.imread(pic_name,-1)
     if "vertical" in pic_name:
-	    rotated = cv2.imwrite('{} {}'.format(pic_name, "-rotated.jpg"), imutils.rotate_bound(img, angle=270))
-	    #cv2.imshow("Angle=90", rotated)
+        rotated = cv2.imwrite('{} {}'.format(pic_name, "-rotated.jpg"), imutils.rotate_bound(img, angle=270))
+        #cv2.imshow("Angle=90", rotated)
         #= cv2.imwrite()
-        #run("testhorizontal.crop.png -rotated.jpg")
+        run('{} {}'.format(pic_name, "-rotated.jpg"))
     else:
-        #run("testhorizontal.crop.png")
+        run(pic_name)
