@@ -439,13 +439,25 @@ def get_text_from_cluster(cluster_vld, region_dict, gimg):
       result = [x.content for x in found]
       str_list.append(result)
     str_list.insert(0, str_list)
-    print("TEXT FOUND");
-    pprint.pprint(str_list)
-    with open('book_info.csv', 'w', newline='') as csvfile:
+    filepath = 'book_info.csv'
+    with open(filepath, 'w', newline='') as csvfile:
         book_info_writer = csv.writer(csvfile, delimiter=' ',
                             quotechar='|', quoting=csv.QUOTE_MINIMAL)
         for item in str_list:
             book_info_writer.writerow([item])
+    extras = ["'", "[", "]"]
+    for line in filepath:
+        for value in line:
+            for item in extras:
+                if item in value:
+                    line = value.replace(item, '')
+                    book_info_writer.writerow(line)
+    print("TEXT FOUND");
+    #pprint.pprint(str_list)
+    with open('book_info.csv', newline='') as csvfile:
+        book_info_reader = csv.reader(csvfile, delimiter=' ', quotechar='|')
+        for row in book_info_reader:
+            print(', '.join(row))
 
 def run(fimage):
     # Constants:
