@@ -13,6 +13,7 @@ import pyocr
 import pyocr.builders
 import codecs
 import imutils
+import csv
 
 class SpineWordBoxBuilder(pyocr.builders.BaseBuilder):
     """
@@ -378,7 +379,6 @@ def kmean(region_dict, rows, num_clusters):
     print("K-mean DONE...")
     return cluster_vld
 
-
 def dbg_get_cluster_rect(cluster_vld, region_dict):
     bbox_list = []
     for cl_no, vld in enumerate(cluster_vld):
@@ -441,6 +441,11 @@ def get_text_from_cluster(cluster_vld, region_dict, gimg):
     str_list.insert(0, str_list)
     print("TEXT FOUND");
     pprint.pprint(str_list)
+    with open('book_info.csv', 'w', newline='') as csvfile:
+        book_info_writer = csv.writer(csvfile, delimiter=' ',
+                            quotechar='|', quoting=csv.QUOTE_MINIMAL)
+        for item in str_list:
+            book_info_writer.writerow([item])
 
 def run(fimage):
     # Constants:
@@ -473,7 +478,6 @@ def run(fimage):
                 sw_med = np.median(sw)
                 region_dict[name] = {'bbox': bb, 'sw_med': sw_med};
                 region_num = region_num + 1
-
     num_clusters = int(rows/char_height)
     cluster_vld = kmean(region_dict, rows, num_clusters)
     bbox_list = dbg_get_cluster_rect(cluster_vld, region_dict)
@@ -487,16 +491,20 @@ if __name__ == '__main__':
     #pic_name = "facebook-logo-horizontal.jpg"
     #pic_name = "facebook-logo-horizontal.crop.png"
     #pic_name = "testvertical.jpg"
-    pic_name = "testvertical.crop.png"
+    #pic_name = "testvertical.crop.png"
     #pic_name = "testhorizontal.jpg"
     #pic_name = "testhorizontal.crop.png"
     #pic_name = "testhorizontal2.jpg"
     #pic_name = "testhorizontal2.crop.png"
     #pic_name = "testsmalltext.jpg"
     #pic_name = "testsmalltext.crop.png"
-    img = cv2.imread(pic_name,-1)
-    if "vertical" in pic_name:
-        rotated = cv2.imwrite('{} {}'.format(pic_name, "-rotated.jpg"), imutils.rotate_bound(img, angle=270))
-        run('{} {}'.format(pic_name, "-rotated.jpg"))
-    else:
-        run(pic_name)
+    rootdir = "Books/H1"
+    for subdir, dirs, files in os.walk(rootdir):
+        for file in files:
+            pic_name = os.path.join(subdir, file)
+            img = cv2.imread(pic_name,-1)
+            if "vertical" in pic_name:
+                rotated = cv2.imwrite('{} {}'.format(pic_name, "-rotated.jpg"), imutils.rotate_bound(img, angle=270))
+                run('{} {}'.format(pic_name, "-rotated.jpg"))
+            else:
+                run(pic_name)
