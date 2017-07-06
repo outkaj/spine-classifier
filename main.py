@@ -498,18 +498,6 @@ def run(fimage):
     dbg_draw_txt_rect(cpy_img, bbox_list)
 
 if __name__ == '__main__':
-    #pic_name = "facebook-logo-vertical.jpg"
-    #pic_name = "facebook-logo-vertical.crop.png"
-    #pic_name = "facebook-logo-horizontal.jpg"
-    #pic_name = "facebook-logo-horizontal.crop.png"
-    #pic_name = "testvertical.jpg"
-    #pic_name = "testvertical.crop.png"
-    #pic_name = "testhorizontal.jpg"
-    #pic_name = "testhorizontal.crop.png"
-    #pic_name = "testhorizontal2.jpg"
-    #pic_name = "testhorizontal2.crop.png"
-    #pic_name = "testsmalltext.jpg"
-    #pic_name = "testsmalltext.crop.png"
     rootdir = "Books/H1"
     for subdir, dirs, files in os.walk(rootdir):
         for file in files:
