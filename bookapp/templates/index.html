@@ -9,34 +9,23 @@
     <!-- load MUI -->
     <link href="//cdn.muicss.com/mui-0.9.17/css/mui.min.css" rel="stylesheet" type="text/css" />
     <script src="//cdn.muicss.com/mui-0.9.17/js/mui.min.js"></script>
-  <!-- custom font css -->
   <title>Spine Classifier</title>
+  <!-- custom font css -->
    <style>
      body {
        font-family: "Roboto", "Helvetica Neue", Helvetica, Arial;
      }
    </style>
  </head>
-   <!-- content goes here -->
   <body>
     <h1>List the filepath you'd like to classify today!</h1>
     <form class="mui-form--inline">
       <div class="mui-textfield">
-<<<<<<< HEAD
-        <form action="{{ url_for('input') }}" method="post">
-            <input type="text" name="filepath" />
-            <input type="password" name="password" />
-            {{ form.csrf_token }}
-          <button type="submit" class="mui-btn mui-btn--raised">Submit</button>
-        </form>
-        </div>
-=======
         <action="{{ url_for('input') }}" method="post">
             <input type="text" name="filepath" />
-          <!-- {{ form.csrf_token }} -->  
+          <!-- {{ form.csrf_token }} -->
           <button type="submit" class="mui-btn mui-btn--raised">Submit</button>
       </diV>
->>>>>>> frontend
     </form>
   </body>
 </html>
